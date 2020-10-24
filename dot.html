@@ -1,0 +1,691 @@
+
+<html>
+    <title>Calculateur DOT</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+        }
+        h1 {
+            font-size: 2em;
+            padding: 10px;
+            max-width: 370px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        h2 {
+            font-size: 1.5em;
+            max-width: 370px;
+            background-color:  #f2f2f2;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            cursor: hand;
+        }
+        div.cache {
+            display: none;
+        }
+        div.spacer {
+            height: 20px;
+        }
+        div.entete {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        table {
+	        border-collapse: collapse;
+	        border-spacing: 0;
+        }
+        th {
+            background-color: #4CAF50;
+            border: 1px solid #ddd;
+            padding: 8px;
+            color: #ffffff;
+            font-size: 0.9em;
+        }
+        td.entete {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.0em;
+            font-weight: bold;
+        }
+        .centre {
+            text-align: center;
+        }
+        .gauche {
+            text-align: left;
+        }
+        .droite {
+            text-align: right;
+        }
+        td {
+            padding: 5px;
+            font-size: 0.9em;
+            border: 1px solid #ddd;
+        }
+        td.sansbord {
+            border: 0px;
+        }
+        tr.pair {
+            background-color:  #f2f2f2;
+        }
+        tr.impair {
+            background-color:  #ffffff;
+        }
+        input[type="number"] {
+            width: 60px;
+            text-align: right;
+        }
+        input[type="number"].small {
+            width: 45px;
+        }
+        input[type="range"] {
+            width: 60px;
+        }
+        button {
+            width: 150px;
+            height: 75px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            font-size: 1.2em;
+        }
+    </style>
+    <body>
+        <h1>Calculateur event DOT</h1>
+        <hr>
+        <div id="divLblPdP"><h2>Pierres de portail</h2></div>
+        <div id="divPdP">
+            <table>
+                <thead>
+                    <th>&nbsp;</th>
+                    <th class="left">Jour</th>
+                    <th>Init</th>
+                    <th>D&eacute;but</th>
+                    <th>Fin</th>
+                    <th class="droite">Pierres</th>
+                </thead>
+                <tbody id="tabPdP"></tbody>
+            </table>
+            <div class="spacer"></div>
+            <table>
+                <thead>
+                    <th>Type</th>
+                    <th>Qt&eacute;</th>
+                    <th>Pierres</th>
+                </thead>
+                <tbody id="tabRelPdP"></tbody>
+            </table>
+            <div class="spacer"></div>
+            <table>
+                <thead>
+                    <th class="gauche">Total</th>
+                    <th class="droite">Valeur</th>
+                </thead>
+                <tbody>
+                    <tr class="impair">
+                        <td>Total pierres de portail :</td>
+                        <td id="tdTotalPdP" class="droite"></td>
+                    </tr>
+                    <tr class="pair">
+                        <td>Total attaques :</td>
+                        <td id="tdTotalAtq" class="droite"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="divLblRel"><h2>Reliques</h2></div>
+        <div id="divRel">
+            <table>
+                <tr>
+                    <td class="sansbord">
+                        <table>
+                            <thead>
+                                <th>Param&egrave;tre</th>
+                                <th>Valeur</th>
+                            </thead>
+                            <tbody>
+                                <tr id="trObj" class="impair">
+                                    <td>Objectif :</td>
+                                </tr>
+                                <tr id="trAmes" class="pair">
+                                    <td>&Acirc;mes initiales :</td>
+                                </tr>
+                                <tr id="trEmpl" class="impair">
+                                    <td>Emplacements :</td>
+                                </tr>
+                                <tr id="trCoef" class="pair">
+                                    <td>Coefficient :</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="sansbord">
+                        <table id="tabRel">
+                            <thead>
+                                <th class="droite">Niveau</th>
+                                <th class="droite">Qt&eacute;</th>
+                            </thead>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div id="divLblAmes"><h2>&Acirc;mes</h2></div>
+        <div id="divAmes">
+            <button id="btnCalcul">Calculer</button>
+        <hr>
+        <div id="divResume">
+            <div class="entete">R&eacute;sum&eacute;&nbsp;:</div>
+            <table>
+                <thead>
+                    <th>Total</th>
+                    <th>Valeur</th>
+                </thead>
+                <tr id="trTotRel" class="pair">
+                    <td>Nombre de reliques :</td>
+                </tr>
+                <tr id="trTotAtq" class="impair">
+                    <td>Nombre d'attaques :</td>
+                </tr>
+                <tr id="trTotAmes" class="pair">
+                    <td>&Acirc;mes collect&eacute;es :</td>
+                </tr>
+            </table>
+            <div class="spacer"></div>
+            <div class="entete">Attaques&nbsp;:</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>R1</td>
+                        <th>R2</td>
+                        <th>R3</td>
+                        <th>R4</td>
+                        <th>Attaques</td>
+                        <th>Âmes</td>
+                        <th>Cumul</td>
+                    </tr>
+                </thead>
+                <tbody id="tabResultat">
+                </tbody>
+            </table>
+        </div>
+        <script language="javascript">
+            "use strict";
+            var param = {
+                "pair": ["pair", "impair"],
+                "coef": ["1.0", "1.1", "1.2", "1.3", "1.4"],
+                "defCoef": "1.0",
+                "heures" : ["00", "01", "02", "03", "04", "05", "06", "07",
+                            "08", "09", "10", "11", "12", "13", "14", "15",
+                            "16", "17", "18", "19", "20", "21", "22", "23"],
+                "minutes": ["00", "10", "20", "30", "40", "50"],
+                "jours": [
+                    ["Me", "Mercredi", false, 0, "00", "00", "00", "00"],
+                    ["Je", "Jeudi", true, 26, "17", "00", "23", "30"],
+                    ["Ve", "Vendredi", true, 26, "06", "40", "23", "30"],
+                    ["Sa", "Samedi", true, 26, "08", "00", "23", "30"],
+                    ["Di", "Dimanche", true, 26, "08", "00", "23", "30"],
+                    ["Lu", "Lundi", true, 26, "06", "40", "11", "00"],
+                    ["Ma", "Mardi", false, 0, "00", "00", "00", "00"]
+                ],
+                "reliquesPdP": [
+                    ["&star;", 3],
+                    ["&star;&star;", 6],
+                    ["&star;&star;&star;", 9],
+                    ["&star;&star;&star;&star;", 12],
+                    ["Pack 25", 25],
+                    ["Pack 50", 50],
+                    ["Pack 75", 75],
+                    ["Pack 100", 100],
+                    ["Pack 125", 125],
+                    ["Pack 150", 150],
+                ],
+                "reliques": [
+                    ["&star;", 3, "R1"],
+                    ["&star;&star;", 4.5, "R2"],
+                    ["&star;&star;&star;", 9, "R3"],
+                    ["&star;&star;&star;&star;", 18, "R4"]
+                ],
+                "totalPdP": 0
+            }
+
+            function formatNum(nombre) {
+                var fmt = new Intl.NumberFormat('fr-FR', {
+                    useGrouping: true,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                });
+                return fmt.format(nombre);
+            }
+
+            function ajouteClasses(objet, classes) {
+                var classesObjet = objet.className.split(" ");
+                classes.split(" ").forEach(classe => {
+                    if (classesObjet.indexOf(classe) == -1) {
+                        objet.className += " " + classe;
+                    }
+                });
+            }
+
+            function celluleRelique(relique) {
+                var col = document.createElement("td");
+                if (relique > 0) {
+                    col.innerHTML = "&star;";
+                    ajouteClasses(col, "centre");
+                }
+                return col;
+            }
+
+            function majResume(compos) {
+                var resTab = document.getElementById("tabResultat");
+                while (resTab.lastElementChild) {
+                    resTab.removeChild(resTab.lastElementChild);
+                }
+                var ames = parseInt(document.getElementById("txtAmes").value);
+                var atq = 0;
+                var reliques = 0;
+                var idx = 0;
+                compos.forEach(compo => {
+                    var classe = param.pair[idx];
+                    ames += compo.ames;
+                    atq += compo.atq;
+                    reliques += (compo.r1 + compo.r2 + compo.r3 + compo.r4);
+                    var row = document.createElement("tr");
+                    row.appendChild(celluleRelique(compo.r1));
+                    row.appendChild(celluleRelique(compo.r2));
+                    row.appendChild(celluleRelique(compo.r3));
+                    row.appendChild(celluleRelique(compo.r4));
+                    var txt = formatNum(compo.atq);
+                    row.appendChild(celluleTexte(txt, "", "droite"));
+                    txt = formatNum(compo.ames);
+                    row.appendChild(celluleTexte(txt, "", "droite"));
+                    txt = formatNum(ames);
+                    row.appendChild(celluleTexte(txt, "", "droite"));
+                    ajouteClasses(row, classe);
+                    resTab.appendChild(row);
+                    idx = (idx + 1) %2;
+                });
+                document.getElementById("txtTotRel").textContent = reliques;
+                document.getElementById("txtTotAtq").textContent = formatNum(atq);
+                document.getElementById("txtTotAmes").textContent = formatNum(ames);
+            }
+
+            function amesAtq(compo, coef) {
+                return Math.round(
+                    (
+                        compo.r1 * param.reliques[0][1] +
+                        compo.r2 * param.reliques[1][1] +
+                        compo.r3 * param.reliques[2][1] +
+                        compo.r4 * param.reliques[3][1] +
+                        1
+                    ) * 10 * coef
+                );
+            }
+
+            function calculeAmes() {
+                var coef = parseFloat(document.getElementById("cboCoef").value);
+                var empl = document.getElementById("sldEmpl").value;
+                var r1 = parseInt(document.getElementById("txtR1").value);
+                var r2 = parseInt(document.getElementById("txtR2").value);
+                var r3 = parseInt(document.getElementById("txtR3").value);
+                var r4 = parseInt(document.getElementById("txtR4").value);
+                var td = document.getElementById("tdTotalPdP")
+                var pdp = param.totalPdP;
+                var objectif = parseInt(document.getElementById("txtObj").value);
+                if (isNaN(r1)) {r1 = 0}
+                if (isNaN(r2)) {r2 = 0}
+                if (isNaN(r3)) {r3 = 0}
+                if (isNaN(r4)) {r4 = 0}
+                if (isNaN(objectif)) {objectif = 0}
+
+                var cumulAmes = 0;
+                var cumulPdP = 0;
+                var compos = new Array();
+                while ((pdp - cumulPdP) > 2 &&
+                       (cumulAmes < objectif || objectif == 0)) {
+                    var utilise = 0;
+                    var compo = {
+                        "r1": 0,
+                        "r2": 0,
+                        "r3": 0,
+                        "r4": 0,
+                        "attaques": 0,
+                        "ames": 0
+                    };
+                    if ((r1 + r2 + r3 + r4) == 0) {
+                        var restePdP = pdp - cumulPdP;
+                        var atq = Math.floor(restePdP / 3);
+                        var ames = atq * coef * 10;
+                        if ((cumulAmes + ames) > objectif && objectif > 0) {
+                            ames = objectif - cumulAmes;
+                            compo.atq = Math.ceil(ames / (coef * 10));
+                        }
+                        else {
+                            compo.atq = atq;
+                        }
+                    }
+                    else
+                    {
+                        compo.atq = 8;
+                        if (r4 > 0 && utilise < empl) {
+                            compo.r4 = 1;
+                            r4--;
+                            utilise++;
+                        }
+                        if (r3 > 0 && utilise < empl) {
+                            compo.r3 = 1;
+                            r3--;
+                            utilise++;
+                        }
+                        if (r2 > 0 && utilise < empl) {
+                            compo.r2 = 1;
+                            r2--;
+                            utilise++;
+                        }
+                        if (r1 > 0 && utilise < empl) {
+                            compo.r1 = 1;
+                            r1--;
+                            utilise++;
+                        }
+                    }
+                    cumulPdP += compo.atq * 3;
+                    compo.ames = amesAtq(compo, coef) * compo.atq;
+                    cumulAmes += compo.ames;
+                    compos.push(compo);
+                }
+                majResume(compos);
+            }
+
+            function initRes() {
+                var tr = document.getElementById("trTotRel");
+                tr.appendChild(celluleTexte("0", "txtTotRel", "droite"));
+                var tr = document.getElementById("trTotAtq");
+                tr.appendChild(celluleTexte("0", "txtTotAtq", "droite"));
+                var tr = document.getElementById("trTotAmes");
+                tr.appendChild(celluleTexte("0", "txtTotAmes", "droite"));
+            }
+
+            function majSpanSlider(spanId, sliderId) {
+                var span = document.getElementById(spanId);
+                var slider = document.getElementById(sliderId);
+                span.textContent = slider.value;
+            }
+
+            function celluleSlider(suffixe, min, max, valeur=min) {
+                var sliderId = "sld" + suffixe;
+                var td = document.createElement("td");
+                var slider = document.createElement("input");
+                slider.setAttribute("type", "range");
+                slider.setAttribute("value", valeur);
+                slider.setAttribute("min", min);
+                slider.setAttribute("max", max);
+                slider.setAttribute("id", sliderId);
+                td.appendChild(slider);
+                var span = document.createElement("span");
+                var spanId = "spn" + suffixe;
+                span.setAttribute("id", spanId);
+                td.appendChild(span);
+                slider.addEventListener('change', function() {
+                    majSpanSlider(spanId, sliderId);
+                });
+                return td;
+            }
+
+            function celluleCoef() {
+                var td = document.createElement("td");
+                var cbo = document.createElement("select");
+                cbo.setAttribute("id", "cboCoef");
+                td.appendChild(cbo);
+                param.coef.forEach(coef => {
+                    var option = document.createElement("option");
+                    option.textContent = coef;
+                    if (coef == param.defCoef) {
+                        option.setAttribute("selected", "");
+                    }
+                    cbo.appendChild(option);
+                });
+                return td;
+            }
+
+            function initRel() {
+                var tabRel = document.getElementById("tabRel");
+                var trObj = document.getElementById("trObj");
+                trObj.appendChild(celluleIntTextBox("Obj", 0, 30000));
+                var trAmes = document.getElementById("trAmes");
+                trAmes.appendChild(celluleIntTextBox("Ames", 0, 30000));
+                var trEmpl = document.getElementById("trEmpl");
+                trEmpl.appendChild(celluleSlider("Empl", 1, 5, 5));
+                majSpanSlider("spnEmpl", "sldEmpl");
+                var trCoef = document.getElementById("trCoef");
+                trCoef.appendChild(celluleCoef());
+                var tabRel = document.getElementById("tabRel");
+                var idx = 0;
+                param.reliques.forEach(relique => {
+                    var classe = param.pair[idx];
+                    var trRel = document.createElement("tr");
+                    trRel.appendChild(celluleTexte(relique[0], "", "droite"));
+                    trRel.appendChild(celluleIntTextBox(relique[2], 0, 100));
+                    ajouteClasses(trRel, classe);
+                    tabRel.appendChild(trRel);
+                    idx = (idx + 1) % 2;
+                });
+            }
+
+            function initRelPdP() {
+                var tabRel = document.getElementById("tabRelPdP");
+                var idx = 0;
+                param.reliquesPdP.forEach(relique => {
+                    var classe = param.pair[idx];
+                    var tr = document.createElement("tr");
+                    tr.appendChild(celluleTexte(relique[0]));
+                    var td = celluleIntTextBox("Rel" + relique[1], 0, 30)
+                    tr.appendChild(td);
+                    tr.appendChild(celluleTexte("", "tdRel" + relique[1], "droite"));
+                    ajouteClasses(tr, classe);
+                    tabRel.appendChild(tr);
+                    idx = (idx + 1) % 2;
+                });
+            }
+
+            function calculePdP() {
+                var totalPdP = 0;
+                // Pierres de portail quotidiennes
+                param.jours.forEach(jour => {
+                    var pdp = 0;
+                    var prefixe = jour[0];
+                    var id = "chk" + prefixe;
+                    if (document.getElementById(id).checked) {
+                        id = "txt" + prefixe + "Init";
+                        var init = document.getElementById(id).value;
+                        id = "cbo" + prefixe + "HDeb";
+                        var heureDeb = document.getElementById(id).value;
+                        id = "cbo" + prefixe + "MDeb";
+                        var minDeb = document.getElementById(id).value;
+                        id = "cbo" + prefixe + "HFin";
+                        var heureFin = document.getElementById(id).value;
+                        id = "cbo" + prefixe + "MFin";
+                        var minFin = document.getElementById(id).value;
+                        heureDeb = parseInt(heureDeb);
+                        minDeb = parseInt(minDeb) + parseInt(heureDeb) * 60;
+                        heureFin = parseInt(heureFin);
+                        if (heureFin < heureDeb) {
+                            heureFin += 24;
+                        }
+                        minFin = parseInt(minFin) + heureFin * 60;
+                        var duree = minFin - minDeb;
+                        pdp = parseInt(init) + Math.floor(duree / 7);
+                    }
+                    id = "td" + prefixe + "PdP";
+                    var td = document.getElementById(id);
+                    td.textContent = formatNum(pdp);
+                    totalPdP += pdp;
+                });
+                // Reliques de pierres de portail
+                param.reliquesPdP.forEach(relique => {
+                    var pdp = 0;
+                    var id = "txtRel" + relique[1];
+                    var nbReliques = document.getElementById(id).value;
+                    pdp = parseInt(nbReliques) * relique[1];
+                    id = "tdRel" + relique[1];
+                    var td = document.getElementById(id);
+                    td.textContent = formatNum(pdp);
+                    totalPdP += pdp;
+                });
+                param.totalPdP = totalPdP;
+                document.getElementById("tdTotalPdP").textContent = formatNum(totalPdP);
+                var totalAtq = Math.floor(totalPdP / 3);
+                document.getElementById("tdTotalAtq").textContent = formatNum(totalAtq);
+            }
+
+            function celluleTexte(texte, id="", classes="") {
+                var td = document.createElement("td");
+                if (classes) {ajouteClasses(td, classes)}
+                if (id) {
+                    td.setAttribute("id", id);
+                }
+                td.innerHTML = texte;
+                return td;
+            }
+
+            function celluleIntTextBox(prefixe, min, max, classes="", jour="",
+                                        valeur=min, listener=calculePdP) {
+                var id = "txt" + jour + prefixe;
+                var td = document.createElement("td");
+                var textbox = document.createElement("input");
+                textbox.setAttribute("value", valeur);
+                textbox.setAttribute("min", min);
+                textbox.setAttribute("max", max);
+                textbox.setAttribute("type", "number");
+                textbox.setAttribute("id", id);
+                if (classes) {ajouteClasses(textbox, classes)}
+                td.appendChild(textbox);
+                textbox.addEventListener('change', listener);
+                return td;
+            }
+
+            function celluleCheckbox(jour, valeur) {
+                var id = "chk" + jour;
+                var td = document.createElement("td");
+                var chk = document.createElement("input");
+                chk.setAttribute("id", id);
+                chk.setAttribute("type", "checkbox");
+                if (valeur) {chk.setAttribute("checked", "");}
+                chk.addEventListener('click', function() {
+                    activeJour(id);
+                    calculePdP();
+                });
+                td.appendChild(chk);
+                return td;
+            }
+
+            function celluleHM(jour, prefixe, heureSel, minuteSel) {
+                var td = document.createElement("td");
+                var id = "cbo" + jour + "H" + prefixe;
+                var cboHeure = document.createElement("select");
+                cboHeure.setAttribute("id", id);
+                param.heures.forEach(heure => {
+                    var option = document.createElement("option");
+                    option.textContent = heure;
+                    if (heureSel == heure) {
+                        option.setAttribute("selected", "");
+                    }
+                    cboHeure.appendChild(option);
+                });
+                td.appendChild(cboHeure);
+                cboHeure.addEventListener('change', function() {
+                    calculePdP();
+                });
+                id = "cbo" + jour + "M" + prefixe;
+                var cboMinute = document.createElement("select");
+                cboMinute.setAttribute("id", id);
+                param.minutes.forEach(minute => {
+                    var option = document.createElement("option");
+                    option.textContent = minute;
+                    if (minuteSel == minute) {
+                        option.setAttribute("selected", "");
+                    }
+                    cboMinute.appendChild(option);
+                });
+                td.appendChild(cboMinute);
+                cboMinute.addEventListener('change', function() {
+                    calculePdP();
+                });
+                return td;
+            }
+
+            function activeJour(id) {
+                var checkbox = document.getElementById(id);
+                var jour = id.substring(3, 5);
+                var elementIDs = [
+                    "txt" + jour + "Init",
+                    "cbo" + jour + "HDeb",
+                    "cbo" + jour + "MDeb",
+                    "cbo" + jour + "HFin",
+                    "cbo" + jour + "MFin"
+                ];
+                elementIDs.forEach(elementID => {
+                    var element = document.getElementById(elementID);
+                    element.disabled = !checkbox.checked;
+                });
+            }
+
+            function initPdP() {
+                var tabJours = document.getElementById("tabPdP");
+                var idx = 0;
+                param.jours.forEach(jour => {
+                    var classe = param.pair[idx];
+                    var tr = document.createElement("tr");
+                    var checkbox = celluleCheckbox(jour[0], jour[2])
+                    tr.appendChild(checkbox);
+                    tr.appendChild(celluleTexte(jour[1]));
+                    tr.appendChild(celluleIntTextBox("Init", 0, 200, "small",
+                                                     jour[0], jour[3]));
+                    tr.appendChild(celluleHM(jour[0], "Deb", jour[4], jour[5]));
+                    tr.appendChild(celluleHM(jour[0], "Fin", jour[6], jour[7]));
+                    var id = "td" + jour[0] + "PdP";
+                    tr.appendChild(celluleTexte("", id, "droite"));
+                    ajouteClasses(tr, classe);
+                    tabJours.appendChild(tr);
+                    activeJour("chk" + jour[0]);
+                    idx = (idx + 1) % 2;
+                });
+            }
+
+            function majSection(section) {
+                var div = document.getElementById(section);
+                var classes = div.className.split(" ");
+                var nouvelleClasse = "";
+                if (classes.indexOf("cache") == -1) {
+                    nouvelleClasse = "cache";
+                }
+                div.className = nouvelleClasse;
+            }
+            
+            function bodyLoaded() {
+                initPdP();
+                initRelPdP();
+                calculePdP();
+                initRel();
+                initRes();
+                var bouton = document.getElementById("btnCalcul");
+                bouton.addEventListener('click', calculeAmes);
+                var sections = [
+                    ['divLblPdP', 'divPdP'],
+                    ['divLblRel', 'divRel'],
+                    ['divLblAmes', 'divAmes']
+                ];
+                sections.forEach(section => {
+                    var div = document.getElementById(section[0]);
+                    div.addEventListener('click', function() {
+                        majSection(section[1]);
+                    });
+                });
+            }
+            window.addEventListener('load', bodyLoaded);
+        </script>
+</html>
